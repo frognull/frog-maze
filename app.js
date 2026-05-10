@@ -834,10 +834,32 @@ class Fireworks {
         this.particles = [];
         this.resize();
         this.animate();
-        for (let i = 0; i < 5; i++) {
-            setTimeout(() => this.createExplosion(), i * 300);
+        const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#aa96da', '#fcbad3', '#a8d8ea'];
+        const logicalWidth = this.canvas.width / this.dpr;
+        const logicalHeight = this.canvas.height / this.dpr;
+        for (let i = 0; i < 60; i++) {
+            setTimeout(() => {
+                if (!this.running) return;
+                const side = i % 2;
+                const x = side === 0 ? 0 : logicalWidth;
+                const y = logicalHeight * 0.3 + Math.random() * logicalHeight * 0.4;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                for (let j = 0; j < 8; j++) {
+                    this.particles.push({
+                        x, y,
+                        vx: (side === 0 ? 1 : -1) * (3 + Math.random() * 5),
+                        vy: -2 + Math.random() * 4,
+                        color,
+                        size: 4 + Math.random() * 6,
+                        rotation: Math.random() * Math.PI * 2,
+                        rotationSpeed: (Math.random() - 0.5) * 0.3,
+                        life: 1,
+                        decay: 0.008 + Math.random() * 0.01
+                    });
+                }
+            }, i * 50);
         }
-        setTimeout(() => this.stop(), 3000);
+        setTimeout(() => this.stop(), 4000);
     }
 
     stop() {
@@ -845,44 +867,29 @@ class Fireworks {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    createExplosion() {
-        const x = Math.random() * this.canvas.width;
-        const y = Math.random() * this.canvas.height * 0.5;
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff6600', '#ff0066'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        for (let i = 0; i < 50; i++) {
-            const angle = (Math.PI * 2 * i) / 50;
-            const speed = 2 + Math.random() * 4;
-            this.particles.push({
-                x, y,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                color,
-                life: 1,
-                decay: 0.01 + Math.random() * 0.02
-            });
-        }
-    }
-
     animate() {
         if (!this.running) return;
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        const logicalWidth = this.canvas.width / this.dpr;
+        const logicalHeight = this.canvas.height / this.dpr;
+        this.ctx.clearRect(0, 0, logicalWidth, logicalHeight);
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             p.x += p.vx;
             p.y += p.vy;
-            p.vy += 0.1;
+            p.vy += 0.15;
+            p.rotation += p.rotationSpeed;
             p.life -= p.decay;
             if (p.life <= 0) {
                 this.particles.splice(i, 1);
                 continue;
             }
-            this.ctx.fillStyle = p.color;
+            this.ctx.save();
+            this.ctx.translate(p.x, p.y);
+            this.ctx.rotate(p.rotation);
             this.ctx.globalAlpha = p.life;
-            this.ctx.beginPath();
-            this.ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-            this.ctx.fill();
+            this.ctx.fillStyle = p.color;
+            this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            this.ctx.restore();
         }
         this.ctx.globalAlpha = 1;
         requestAnimationFrame(() => this.animate());
