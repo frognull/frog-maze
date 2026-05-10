@@ -105,25 +105,33 @@ class MazeRenderer {
         this.solutionPath = [];
         this.animationCells = [];
         this.visitedCells = [];
+        this.dpr = window.devicePixelRatio || 1;
     }
 
     resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        this.canvas.width = width * this.dpr;
+        this.canvas.height = height * this.dpr;
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';
+        this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
         this.calculateSize();
         this.render();
     }
 
     calculateSize() {
+        const logicalWidth = this.canvas.width / this.dpr;
+        const logicalHeight = this.canvas.height / this.dpr;
         const drawerWidth = document.getElementById('drawer').classList.contains('collapsed') ? 0 : 320;
-        const availableWidth = this.canvas.width - drawerWidth - 40;
-        const availableHeight = this.canvas.height - 40;
+        const availableWidth = logicalWidth - drawerWidth - 40;
+        const availableHeight = logicalHeight - 40;
         this.cellSize = Math.min(availableWidth / this.maze.width, availableHeight / this.maze.height);
         this.cellSize = Math.max(this.cellSize, 10);
         const totalWidth = this.maze.width * this.cellSize;
         const totalHeight = this.maze.height * this.cellSize;
-        this.offsetX = (this.canvas.width - drawerWidth - totalWidth) / 2;
-        this.offsetY = (this.canvas.height - totalHeight) / 2;
+        this.offsetX = (logicalWidth - drawerWidth - totalWidth) / 2;
+        this.offsetY = (logicalHeight - totalHeight) / 2;
     }
 
     render() {
@@ -810,11 +818,17 @@ class Fireworks {
         this.ctx = canvas.getContext('2d');
         this.particles = [];
         this.running = false;
+        this.dpr = window.devicePixelRatio || 1;
     }
 
     resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        this.canvas.width = width * this.dpr;
+        this.canvas.height = height * this.dpr;
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';
+        this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     }
 
     start() {
