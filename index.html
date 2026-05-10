@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迷宫生成器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="mazeCanvas"></canvas>
+    
+    <button id="toggleDrawer" class="toggle-btn">
+        <span id="toggleIcon">◀</span>
+    </button>
+    
+    <div id="drawer" class="drawer">
+        <div class="drawer-content">
+            <h2>迷宫控制台</h2>
+            
+            <div class="section">
+                <h3>迷宫配置</h3>
+                <div class="config-row">
+                    <label>宽度:</label>
+                    <input type="number" id="mazeWidth" value="20" min="5" max="100">
+                </div>
+                <div class="config-row">
+                    <label>高度:</label>
+                    <input type="number" id="mazeHeight" value="20" min="5" max="100">
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>迷宫生成</h3>
+                <select id="generateAlgorithm">
+                    <option value="recursiveBacktrack">递归回溯</option>
+                    <option value="prim">Prim算法</option>
+                    <option value="kruskal">Kruskal算法</option>
+                    <option value="eller">Eller算法</option>
+                    <option value="recursiveDivision">递归分割</option>
+                </select>
+                <button id="generateBtn" class="btn primary">生成迷宫</button>
+            </div>
+            
+            <div class="section">
+                <h3>迷宫求解</h3>
+                <select id="solveAlgorithm">
+                    <option value="bfs">BFS (最短路径)</option>
+                    <option value="dfs">DFS (深度优先)</option>
+                    <option value="astar">A* (启发式)</option>
+                    <option value="dijkstra">Dijkstra (权重)</option>
+                    <option value="wallFollower">墙跟随</option>
+                </select>
+                <button id="solveBtn" class="btn primary">求解迷宫</button>
+                <button id="clearSolutionBtn" class="btn">清除路径</button>
+                <div id="solveStats" class="stats-box" style="display:none;">
+                    <div class="stat-item">
+                        <span>遍历单元格:</span>
+                        <span id="statVisited">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>路径长度:</span>
+                        <span id="statPathLength">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>耗时:</span>
+                        <span id="statTime">0ms</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>动画速度</h3>
+                <input type="range" id="speedSlider" min="1" max="100" value="100">
+                <span id="speedValue">100</span>
+            </div>
+            
+            <div class="section">
+                <h3>模式切换</h3>
+                <button id="playModeBtn" class="btn active">游玩模式</button>
+                <button id="editModeBtn" class="btn">编辑模式</button>
+            </div>
+            
+            <div class="section" id="editOptions" style="display:none;">
+                <h3>编辑选项</h3>
+                <div class="edit-options">
+                    <label class="edit-option">
+                        <input type="radio" name="editType" value="wall" checked>
+                        <span>编辑墙壁</span>
+                    </label>
+                    <label class="edit-option">
+                        <input type="radio" name="editType" value="start">
+                        <span>设置起点</span>
+                    </label>
+                    <label class="edit-option">
+                        <input type="radio" name="editType" value="end">
+                        <span>设置终点</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>导入/导出</h3>
+                <button id="exportBtn" class="btn">导出迷宫</button>
+                <button id="importBtn" class="btn">导入迷宫</button>
+                <input type="file" id="fileInput" accept=".maze" style="display:none;">
+            </div>
+        </div>
+    </div>
+    
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <h2>成功!</h2>
+            <p>恭喜你到达终点!</p>
+            <button id="closeModal" class="btn primary">确定</button>
+        </div>
+    </div>
+    
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+    
+    <script src="app.js"></script>
+</body>
+</html>
