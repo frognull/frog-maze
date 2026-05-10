@@ -573,6 +573,7 @@ class MazeSolver {
     addVisitedCell(cell) {
         if (!this.visitedCells.some(c => c.x === cell.x && c.y === cell.y)) {
             this.visitedCells.push({ x: cell.x, y: cell.y });
+            this.renderer.setVisitedCells(this.visitedCells);
         }
     }
 
