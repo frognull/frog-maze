@@ -199,25 +199,22 @@ class MazeRenderer {
     }
 
     drawStartEnd() {
-        const startX = this.offsetX + this.maze.startX * this.cellSize + this.cellSize / 2;
-        const startY = this.offsetY + this.maze.startY * this.cellSize + this.cellSize / 2;
-        const endX = this.offsetX + this.maze.endX * this.cellSize + this.cellSize / 2;
-        const endY = this.offsetY + this.maze.endY * this.cellSize + this.cellSize / 2;
-        const radius = this.cellSize * 0.3;
+        const size = this.cellSize * 0.6;
+        const offset = (this.cellSize - size) / 2;
+        const startX = this.offsetX + this.maze.startX * this.cellSize + offset;
+        const startY = this.offsetY + this.maze.startY * this.cellSize + offset;
+        const endX = this.offsetX + this.maze.endX * this.cellSize + offset;
+        const endY = this.offsetY + this.maze.endY * this.cellSize + offset;
         this.ctx.fillStyle = '#00ff00';
-        this.ctx.beginPath();
-        this.ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-        this.ctx.fill();
+        this.ctx.fillRect(startX, startY, size, size);
         this.ctx.fillStyle = '#ff0000';
-        this.ctx.beginPath();
-        this.ctx.arc(endX, endY, radius, 0, Math.PI * 2);
-        this.ctx.fill();
+        this.ctx.fillRect(endX, endY, size, size);
     }
 
     drawPlayer() {
         const x = this.offsetX + this.playerX * this.cellSize + this.cellSize / 2;
         const y = this.offsetY + this.playerY * this.cellSize + this.cellSize / 2;
-        const radius = this.cellSize * 0.35;
+        const radius = this.cellSize * 0.25;
         this.ctx.fillStyle = '#ffcc00';
         this.ctx.beginPath();
         this.ctx.arc(x, y, radius, 0, Math.PI * 2);
